@@ -2,29 +2,42 @@ const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema(
   {
-    title: {
+    cardName: {
       type: String,
-      required: [true, 'Please add a title'],
+      required: [true, 'Please add a card name'],
       trim: true,
-      maxlength: [100, 'Title cannot be more than 100 characters']
+      maxlength: [100, 'Card name cannot be more than 100 characters']
     },
-    description: {
+    issuer: {
       type: String,
-      required: [true, 'Please add a description'],
-      maxlength: [500, 'Description cannot be more than 500 characters']
+      required: [true, 'Please add card issuer'],
+      trim: true,
+      maxlength: [50, 'Issuer cannot be more than 50 characters']
     },
-    imageUrl: {
+    cardType: {
       type: String,
-      required: [true, 'Please add an image URL']
+      required: [true, 'Please add card type'],
+      enum: ['Visa', 'Mastercard', 'American Express', 'Discover', 'Other']
     },
-    owner: {
+    rewardsTier: {
+      type: String,
+      enum: ['Basic', 'Silver', 'Gold', 'Platinum', 'Premium'],
+      default: 'Basic'
+    },
+    lastFourDigits: {
+      type: String,
+      required: [true, 'Please add last four digits'],
+      minlength: [4, 'Must be 4 digits'],
+      maxlength: [4, 'Must be 4 digits']
+    },
+    pointsBalance: {
+      type: Number,
+      default: 0
+    },
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
-    },
-    isPublic: {
-      type: Boolean,
-      default: true
     }
   },
   {
@@ -33,3 +46,4 @@ const cardSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model('Card', cardSchema);
+
