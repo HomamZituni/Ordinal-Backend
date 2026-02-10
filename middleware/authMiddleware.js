@@ -29,3 +29,5 @@ exports.protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
+
+//Middleware protections to verify token safety and existence
