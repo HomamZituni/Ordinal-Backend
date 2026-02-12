@@ -5,7 +5,7 @@ const Card = require('../models/Card');
 // @access  Private
 exports.createCard = async (req, res) => {
   try {
-    const { cardName, issuer, cardType, rewardsTier, lastFourDigits } = req.body;
+    const { cardName, issuer, cardType, rewardsTier, lastFourDigits, pointsBalance } = req.body;
 
     const card = await Card.create({
       cardName,
@@ -13,6 +13,7 @@ exports.createCard = async (req, res) => {
       cardType,
       rewardsTier,
       lastFourDigits,
+      pointsBalance,
       user: req.user._id
     });
 

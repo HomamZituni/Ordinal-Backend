@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { getGamification } = require('../controllers/recommendationController');
+
 const {
   createCard,
   getCards,
@@ -15,10 +17,12 @@ router.use(protect);
 // POST /api/cards - Create card
 // GET /api/cards - Get all cards
 router.route('/').post(createCard).get(getCards);
-
+//gamification route
+router.get('/gamification', getGamification);
 // GET /api/cards/:id - Get single card
-// PUT /api/cards/:id - Update card
+// PATCH /api/cards/:id - Update card
 // DELETE /api/cards/:id - Delete card
-router.route('/:id').get(getCard).put(updateCard).delete(deleteCard);
+router.route('/:id').get(getCard).patch(updateCard).delete(deleteCard);
+
 
 module.exports = router;

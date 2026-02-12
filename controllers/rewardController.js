@@ -1,4 +1,4 @@
-const Reward = require('../models/Reward');
+const Reward = require('../models/Rewards');
 const Card = require('../models/Card');
 
 // @desc    Get all rewards for a card

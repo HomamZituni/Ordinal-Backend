@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Reward = require('../models/Reward');
+const Reward = require('../models/Rewards');
 const connectDB = require('../config/db');
 
 dotenv.config();
