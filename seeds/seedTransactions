@@ -43,7 +43,7 @@ const randomDate = () => {
 };
 
 // Generate random amount between min and max
-const randomAmount = (min = 10, max = 500) => {
+const randomAmount = (min = 10, max = 300) => {
   return Math.round((Math.random() * (max - min) + min) * 100) / 100;
 };
 

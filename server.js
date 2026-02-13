@@ -10,6 +10,11 @@ connectDB();
 
 const app = express();
 
+//CORS config
+const cors = require('cors');
+app.use(cors());
+
+
 // Middleware
 app.use(express.json());
 
