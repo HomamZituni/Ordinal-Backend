@@ -1,5 +1,5 @@
 const Card = require('../models/Card');
-const Reward = require('../models/Rewards');
+const Reward = require('../models/Reward');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 
@@ -181,7 +181,6 @@ exports.getGamification = async (req, res) => {
 const calculateNBAScore = (reward, card, transactions) => {
   let score = 0;
 
-
   // Factor 1: Affordability (can user redeem now?)
   if (card.pointsBalance >= reward.pointsCost) {
     score += 50; // High priority if affordable
@@ -191,11 +190,9 @@ const calculateNBAScore = (reward, card, transactions) => {
     score += percentAffordable * 0.3;
   }
 
-
   // Factor 2: Value efficiency (cents per point)
   const valuePerPoint = (reward.value / reward.pointsCost) * 100;
   score += valuePerPoint * 0.5;
-
 
   // Factor 3: Category alignment with recent spending
   if (transactions.length > 0) {
@@ -204,25 +201,50 @@ const calculateNBAScore = (reward, card, transactions) => {
       categoryCount[t.category] = (categoryCount[t.category] || 0) + 1;
     });
 
-
-    // Map reward categories to transaction categories
-    const categoryMapping = {
-      'Travel': ['Travel', 'Gas'],
-      'Dining': ['Dining'],
-      'Entertainment': ['Entertainment'],
-      'Shopping': ['Shopping'],
-      'Gift Cards': ['Shopping', 'Groceries']
+    // Map reward titles to transaction categories they benefit from
+    const rewardToCategoryMapping = {
+      // Dining rewards
+      '5% Cash Back on Dining': ['Dining'],
+      '$50 Restaurant.com Gift Card': ['Dining'],
+      '$100 DoorDash Credit': ['Dining'],
+      'Gourmet Dinner Experience': ['Dining'],
+      
+      // Travel rewards
+      'Round-Trip Domestic Flight': ['Travel'],
+      'Hotel Stay (2 Nights)': ['Travel'],
+      '$200 Airbnb Credit': ['Travel'],
+      '3% Travel Bonus': ['Travel'],
+      
+      // Gas rewards
+      '4% Cash Back on Gas': ['Gas'],
+      '$75 Shell Gas Card': ['Gas'],
+      'Free Car Wash Package': ['Gas', 'Transportation'],
+      
+      // Grocery rewards
+      '3% Cash Back on Groceries': ['Groceries'],
+      '$50 Whole Foods Gift Card': ['Groceries'],
+      '$100 Walmart Gift Card': ['Groceries', 'Shopping'],
+      
+      // Shopping/Entertainment
+      '$100 Amazon Gift Card': ['Shopping'],
+      'Apple AirPods Pro': ['Shopping'],
+      '$50 Netflix Gift Card': ['Entertainment'],
+      
+      // General rewards (benefit from all spending)
+      '$50 Statement Credit': ['Groceries', 'Dining', 'Travel', 'Gas', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Transportation'],
+      '$250 Cash Back': ['Groceries', 'Dining', 'Travel', 'Gas', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Transportation'],
+      '2% Unlimited Cash Back': ['Groceries', 'Dining', 'Travel', 'Gas', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Transportation']
     };
 
-
-    const mappedCategories = categoryMapping[reward.category] || [];
-    mappedCategories.forEach(cat => {
+    const relevantCategories = rewardToCategoryMapping[reward.title] || [];
+    
+    // Boost score for each transaction in relevant categories
+    relevantCategories.forEach(cat => {
       if (categoryCount[cat]) {
-        score += categoryCount[cat] * 2; // Boost based on spending frequency
+        score += categoryCount[cat] * 5; // Significant boost for category match
       }
     });
   }
-
 
   // Factor 4: Tier relevance (prefer rewards at user's tier level)
   const tierHierarchy = ['Basic', 'Silver', 'Gold', 'Platinum', 'Premium'];
@@ -231,9 +253,9 @@ const calculateNBAScore = (reward, card, transactions) => {
   );
   score += (5 - tierDifference) * 5;
 
-
   return Math.round(score);
 };
+
 
 
 // Helper: Calculate gamification prompts

@@ -1,12 +1,15 @@
 const express = require('express');
-const router = express.Router({ mergeParams: true }); // mergeParams allows access to :cardId
-const { getRewards } = require('../controllers/rewardController');
+const router = express.Router({ mergeParams: true });
+const { getCardRewards, getRankedRewards } = require('../controllers/rewardController');
 const { protect } = require('../middleware/authMiddleware');
 
-// All routes are protected
+// Protect all reward routes
 router.use(protect);
 
 // GET /api/cards/:cardId/rewards - Get all rewards for a card
-router.route('/').get(getRewards);
+router.get('/:cardId/rewards', getCardRewards);
+
+// GET /api/cards/:cardId/rewards/ranked - Get NBA-ranked rewards for a specific card
+router.get('/:cardId/rewards/ranked', getRankedRewards);
 
 module.exports = router;
