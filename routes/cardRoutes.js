@@ -10,15 +10,21 @@ const {
   deleteCard
 } = require('../controllers/cardController');
 
-const {
-  getCardRewards,        // Fetch all rewards for a card
-  getRankedRewards       // Fetch ranked rewards for a card (NBA ranking)
-} = require('../controllers/rewardController');
-
+const rewardController = require('../controllers/rewardController');
 const { protect } = require('../middleware/authMiddleware');
 
 // All routes are protected (require authentication)
 router.use(protect);
+
+// Fail fast with a clear error if a handler isn’t actually a function
+const mustBeFn = (name, fn) => {
+  if (typeof fn !== 'function') {
+    console.error(`[ROUTE ERROR] ${name} is ${typeof fn}. Check exports in controllers/rewardController.js`);
+    console.error('rewardController keys:', Object.keys(rewardController || {}));
+    throw new TypeError(`${name} must be a function`);
+  }
+  return fn;
+};
 
 // POST /api/cards - Create card
 // GET /api/cards - Get all cards
@@ -33,9 +39,10 @@ router.get('/gamification', getGamification);
 router.route('/:id').get(getCard).patch(updateCard).delete(deleteCard);
 
 // NEW: GET /api/cards/:id/rewards - Get all rewards for this card
-router.get('/:id/rewards', getCardRewards);
+router.get('/:id/rewards', mustBeFn('getCardRewards', rewardController.getCardRewards));
 
 // NEW: GET /api/cards/:id/rewards/ranked - Get ranked rewards for this card
-router.get('/:id/rewards/ranked', getRankedRewards);
+router.get('/:id/rewards/ranked', mustBeFn('getRankedRewards', rewardController.getRankedRewards));
 
 module.exports = router;
+

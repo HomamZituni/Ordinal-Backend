@@ -1,4 +1,6 @@
 const Card = require('../models/Card');
+const Transaction = require('../models/Transaction');
+
 
 // @desc    Create new card
 // @route   POST /api/cards
@@ -101,11 +103,16 @@ exports.deleteCard = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to delete this card' });
     }
 
-    await Card.findByIdAndDelete(req.params.id);
+    // Delete child transactions first (avoid orphans)
+    await Transaction.deleteMany({ card: card._id });
+
+    // Then delete the card
+    await Card.findByIdAndDelete(card._id);
 
     res.status(200).json({ message: 'Card deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 

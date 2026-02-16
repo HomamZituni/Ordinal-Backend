@@ -33,6 +33,16 @@ const rewardSchema = new mongoose.Schema(
       required: [true, 'Please add reward value'],
       min: [0, 'Value cannot be negative']
     },
+
+    merchantTargets: {
+      type: [String],
+      default: []
+    },
+    categoryTargets: {
+      type: [String],
+      default: []
+    },
+
     imageUrl: {
       type: String
     },

@@ -1,132 +1,84 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const Reward = require('../models/Rewards');
-const connectDB = require('../config/db');
+// seeds/seedRewards.js (or whatever your seeder path is)
 
+const dotenv = require('dotenv');
+const Reward = require('../models/Reward');
+const connectDB = require('../config/db');
 
 dotenv.config();
 connectDB();
 
-
 const rewards = [
-  // DINING & RESTAURANTS (4 rewards)
+  // --------------------
+  // DINING (merchant + aggregator + cashback fallback)
+  {
+    title: '$25 McDonald’s Gift Card',
+    description: 'Use at McDonald’s locations.',
+    pointsCost: 2500,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 25,
+    isActive: true
+  },
+  {
+    title: '$25 Chipotle Gift Card',
+    description: 'Use at Chipotle restaurants.',
+    pointsCost: 2500,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 25,
+    isActive: true
+  },
+  {
+    title: '$25 Starbucks Gift Card',
+    description: 'Use at Starbucks locations.',
+    pointsCost: 2500,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 25,
+    isActive: true
+  },
+  {
+    title: '$100 DoorDash Credit',
+    description: 'Food delivery credit (Dining-related fallback).',
+    pointsCost: 10000,
+    category: 'Gift Cards',
+    tier: 'Silver',
+    value: 100,
+    isActive: true
+  },
+  {
+    title: '$50 Restaurant.com Gift Card',
+    description: 'Dining experiences at thousands of restaurants.',
+    pointsCost: 5000,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 50,
+    isActive: true
+  },
   {
     title: '5% Cash Back on Dining',
-    description: 'Earn 5% cash back on all restaurant and dining purchases',
+    description: 'Earn 5% cash back on restaurant and dining purchases.',
     pointsCost: 15000,
     category: 'Cash Back',
     tier: 'Gold',
     value: 150,
     isActive: true
   },
+
+  // --------------------
+  // GROCERIES (merchant gift cards + cashback fallback)
   {
-    title: '$50 Restaurant.com Gift Card',
-    description: 'Redeem for dining experiences at thousands of restaurants',
+    title: '$50 Kroger Gift Card',
+    description: 'Use at Kroger for groceries and household items.',
     pointsCost: 5000,
     category: 'Gift Cards',
     tier: 'Basic',
     value: 50,
-    isActive: true
-  },
-  {
-    title: '$100 DoorDash Credit',
-    description: 'Order food delivery from your favorite restaurants',
-    pointsCost: 10000,
-    category: 'Gift Cards',
-    tier: 'Silver',
-    value: 100,
-    isActive: true
-  },
-  {
-    title: 'Gourmet Dinner Experience',
-    description: 'Fine dining experience for two at select restaurants',
-    pointsCost: 20000,
-    category: 'Experiences',
-    tier: 'Gold',
-    value: 200,
-    isActive: true
-  },
-
-  // TRAVEL (4 rewards)
-  {
-    title: 'Round-Trip Domestic Flight',
-    description: 'Redeem for a domestic round-trip flight (up to $350 value)',
-    pointsCost: 35000,
-    category: 'Travel',
-    tier: 'Gold',
-    value: 350,
-    isActive: true
-  },
-  {
-    title: 'Hotel Stay (2 Nights)',
-    description: '2-night hotel stay at select properties (up to $500 value)',
-    pointsCost: 50000,
-    category: 'Travel',
-    tier: 'Platinum',
-    value: 500,
-    isActive: true
-  },
-  {
-    title: '$200 Airbnb Credit',
-    description: 'Credit towards your next Airbnb booking',
-    pointsCost: 20000,
-    category: 'Travel',
-    tier: 'Gold',
-    value: 200,
-    isActive: true
-  },
-  {
-    title: '3% Travel Bonus',
-    description: 'Earn 3% back on all travel purchases for 6 months',
-    pointsCost: 25000,
-    category: 'Cash Back',
-    tier: 'Gold',
-    value: 250,
-    isActive: true
-  },
-
-  // GAS & AUTOMOTIVE (3 rewards)
-  {
-    title: '4% Cash Back on Gas',
-    description: 'Earn 4% cash back on all gas station purchases',
-    pointsCost: 12000,
-    category: 'Cash Back',
-    tier: 'Silver',
-    value: 120,
-    isActive: true
-  },
-  {
-    title: '$75 Shell Gas Card',
-    description: 'Redeem for gas at Shell stations nationwide',
-    pointsCost: 7500,
-    category: 'Gift Cards',
-    tier: 'Silver',
-    value: 75,
-    isActive: true
-  },
-  {
-    title: 'Free Car Wash Package',
-    description: '10 premium car washes at participating locations',
-    pointsCost: 5000,
-    category: 'Experiences',
-    tier: 'Basic',
-    value: 50,
-    isActive: true
-  },
-
-  // GROCERIES (3 rewards)
-  {
-    title: '3% Cash Back on Groceries',
-    description: 'Earn 3% cash back on all grocery store purchases',
-    pointsCost: 10000,
-    category: 'Cash Back',
-    tier: 'Silver',
-    value: 100,
     isActive: true
   },
   {
     title: '$50 Whole Foods Gift Card',
-    description: 'Shop for groceries at Whole Foods Market',
+    description: 'Shop for groceries at Whole Foods Market.',
     pointsCost: 5000,
     category: 'Gift Cards',
     tier: 'Basic',
@@ -135,18 +87,97 @@ const rewards = [
   },
   {
     title: '$100 Walmart Gift Card',
-    description: 'Use at Walmart stores or online for groceries and more',
+    description: 'Use at Walmart stores or online.',
     pointsCost: 10000,
     category: 'Gift Cards',
     tier: 'Silver',
     value: 100,
     isActive: true
   },
+  {
+    title: '$50 Target Gift Card',
+    description: 'Use at Target stores or online.',
+    pointsCost: 5000,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 50,
+    isActive: true
+  },
+  {
+    title: '3% Cash Back on Groceries',
+    description: 'Earn 3% cash back on grocery store purchases.',
+    pointsCost: 10000,
+    category: 'Cash Back',
+    tier: 'Silver',
+    value: 100,
+    isActive: true
+  },
 
-  // SHOPPING & ENTERTAINMENT (3 rewards)
+  // --------------------
+  // GAS (merchant gift cards + cashback fallback)
+  {
+    title: '$75 Shell Gas Card',
+    description: 'Redeem for gas at Shell stations.',
+    pointsCost: 7500,
+    category: 'Gift Cards',
+    tier: 'Silver',
+    value: 75,
+    isActive: true
+  },
+  {
+    title: '$50 Chevron Gas Card',
+    description: 'Redeem for gas at Chevron stations.',
+    pointsCost: 5000,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 50,
+    isActive: true
+  },
+  {
+    title: '4% Cash Back on Gas',
+    description: 'Earn 4% cash back on gas station purchases.',
+    pointsCost: 12000,
+    category: 'Cash Back',
+    tier: 'Silver',
+    value: 120,
+    isActive: true
+  },
+
+  // --------------------
+  // ENTERTAINMENT (merchant gift cards + cashback fallback)
+  {
+    title: '$50 Netflix Gift Card',
+    description: 'Netflix credit.',
+    pointsCost: 5000,
+    category: 'Gift Cards',
+    tier: 'Basic',
+    value: 50,
+    isActive: true
+  },
+
+  // --------------------
+  // SHOPPING (merchant gift cards + merchandise)
   {
     title: '$100 Amazon Gift Card',
-    description: 'Redeem your points for a $100 Amazon gift card',
+    description: 'Amazon gift card.',
+    pointsCost: 10000,
+    category: 'Gift Cards',
+    tier: 'Silver',
+    value: 100,
+    isActive: true
+  },
+  {
+  title: '$200 Apple Gift Card',
+  description: 'Use for Apple purchases (Apple Store / online).',
+  pointsCost: 20000,
+  category: 'Gift Cards',
+  tier: 'Gold',
+  value: 200,
+  isActive: true
+},
+  {
+    title: '$100 Best Buy Gift Card',
+    description: 'Best Buy gift card.',
     pointsCost: 10000,
     category: 'Gift Cards',
     tier: 'Silver',
@@ -155,27 +186,58 @@ const rewards = [
   },
   {
     title: 'Apple AirPods Pro',
-    description: 'Latest generation Apple AirPods Pro',
+    description: 'Apple AirPods Pro (Merchandise reward).',
     pointsCost: 25000,
     category: 'Merchandise',
     tier: 'Gold',
     value: 249,
     isActive: true
   },
+
+  // --------------------
+  // TRAVEL (travel reward + lyft merchant-like travel reward + travel cashback)
   {
-    title: '$50 Netflix Gift Card',
-    description: 'Enjoy streaming entertainment with Netflix credit',
+    title: '$50 Lyft Credit',
+    description: 'Credit toward Lyft rides.',
     pointsCost: 5000,
-    category: 'Gift Cards',
+    category: 'Travel',
     tier: 'Basic',
     value: 50,
     isActive: true
   },
+  {
+  title: '$100 Delta Airlines Credit',
+  description: 'Credit toward Delta Airlines purchases.',
+  pointsCost: 10000,
+  category: 'Travel',
+  tier: 'Silver',
+  value: 100,
+  isActive: true
+},
+  {
+    title: '$200 Airbnb Credit',
+    description: 'Credit towards your next Airbnb booking.',
+    pointsCost: 20000,
+    category: 'Travel',
+    tier: 'Gold',
+    value: 200,
+    isActive: true
+  },
+  {
+    title: '3% Travel Bonus',
+    description: 'Earn 3% back on travel purchases for 6 months.',
+    pointsCost: 25000,
+    category: 'Cash Back',
+    tier: 'Gold',
+    value: 250,
+    isActive: true
+  },
 
-  // GENERAL CASH BACK & STATEMENT CREDIT (3 rewards)
+  // --------------------
+  // BILL / GENERAL FALLBACKS
   {
     title: '$50 Statement Credit',
-    description: 'Apply $50 credit to your card statement',
+    description: 'Apply $50 credit to your card statement.',
     pointsCost: 5000,
     category: 'Statement Credit',
     tier: 'Basic',
@@ -183,8 +245,17 @@ const rewards = [
     isActive: true
   },
   {
+  title: '$100 Verizon Statement Credit',
+  description: 'Statement credit for Verizon bill payments.',
+  pointsCost: 10000,
+  category: 'Statement Credit',
+  tier: 'Silver',
+  value: 100,
+  isActive: true
+},
+  {
     title: '$250 Cash Back',
-    description: 'Receive $250 cash back deposited to your bank account',
+    description: 'Receive $250 cash back deposited to your bank account.',
     pointsCost: 25000,
     category: 'Cash Back',
     tier: 'Gold',
@@ -193,7 +264,7 @@ const rewards = [
   },
   {
     title: '2% Unlimited Cash Back',
-    description: 'Earn 2% cash back on all purchases for 3 months',
+    description: 'Earn 2% cash back on all purchases for 3 months.',
     pointsCost: 20000,
     category: 'Cash Back',
     tier: 'Gold',
@@ -202,18 +273,13 @@ const rewards = [
   }
 ];
 
-
 const seedRewards = async () => {
   try {
-    // Clear existing rewards
     await Reward.deleteMany();
     console.log('Existing rewards deleted');
 
-
-    // Insert new rewards
     await Reward.insertMany(rewards);
     console.log(`${rewards.length} rewards seeded successfully`);
-
 
     process.exit(0);
   } catch (error) {
@@ -222,7 +288,8 @@ const seedRewards = async () => {
   }
 };
 
-
 seedRewards();
+
+
 
 
