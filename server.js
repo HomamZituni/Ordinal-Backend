@@ -29,8 +29,8 @@ const userRoutes = require('./routes/userRoutes');
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/cards/:cardId/transactions', transactionRoutes);
-app.use('/api/rewards', rewardRoutes); // FIXED: Mount rewards at /api/rewards for NBA endpoint
-app.use('/api/cards/:cardId/rewards', rewardRoutes); // Keep old route for compatibility
+app.use('/api/rewards', rewardRoutes); 
+app.use('/api/cards/:cardId/rewards', rewardRoutes); 
 app.use('/api/cards/:cardId/recommendations', recommendationRoutes); 
 app.use('/api/users', userRoutes);
 

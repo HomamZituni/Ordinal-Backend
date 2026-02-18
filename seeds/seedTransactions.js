@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected for seeding...'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// CORRECT merchant-category mappings + realistic amount ranges
+// merchant-category mappings + realistic amount ranges
 const merchantsData = [
   { name: 'Whole Foods', category: 'Groceries', min: 50, max: 150 },
   { name: 'Kroger', category: 'Groceries', min: 40, max: 120 },

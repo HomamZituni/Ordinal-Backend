@@ -16,7 +16,7 @@ const { protect } = require('../middleware/authMiddleware');
 // All routes are protected (require authentication)
 router.use(protect);
 
-// Fail fast with a clear error if a handler isn’t actually a function
+//error if a handler isn’t actually a function
 const mustBeFn = (name, fn) => {
   if (typeof fn !== 'function') {
     console.error(`[ROUTE ERROR] ${name} is ${typeof fn}. Check exports in controllers/rewardController.js`);

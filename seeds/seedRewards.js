@@ -1,4 +1,4 @@
-// seeds/seedRewards.js (or whatever your seeder path is)
+
 
 const dotenv = require('dotenv');
 const Reward = require('../models/Reward');
@@ -8,8 +8,7 @@ dotenv.config();
 connectDB();
 
 const rewards = [
-  // --------------------
-  // DINING (merchant + aggregator + cashback fallback)
+  // DINING 
   {
     title: '$25 McDonald’s Gift Card',
     description: 'Use at McDonald’s locations.',
@@ -65,8 +64,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // GROCERIES (merchant gift cards + cashback fallback)
+  
+  // GROCERIES 
   {
     title: '$50 Kroger Gift Card',
     description: 'Use at Kroger for groceries and household items.',
@@ -113,8 +112,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // GAS (merchant gift cards + cashback fallback)
+  
+  // GAS 
   {
     title: '$75 Shell Gas Card',
     description: 'Redeem for gas at Shell stations.',
@@ -143,8 +142,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // ENTERTAINMENT (merchant gift cards + cashback fallback)
+
+  // ENTERTAINMENT 
   {
     title: '$50 Netflix Gift Card',
     description: 'Netflix credit.',
@@ -155,8 +154,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // SHOPPING (merchant gift cards + merchandise)
+  
+  // SHOPPING 
   {
     title: '$100 Amazon Gift Card',
     description: 'Amazon gift card.',
@@ -194,8 +193,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // TRAVEL (travel reward + lyft merchant-like travel reward + travel cashback)
+ 
+  // TRAVEL 
   {
     title: '$50 Lyft Credit',
     description: 'Credit toward Lyft rides.',
@@ -233,8 +232,8 @@ const rewards = [
     isActive: true
   },
 
-  // --------------------
-  // BILL / GENERAL FALLBACKS
+  
+  // BILLS
   {
     title: '$50 Statement Credit',
     description: 'Apply $50 credit to your card statement.',

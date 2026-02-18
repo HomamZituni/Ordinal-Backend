@@ -4,8 +4,7 @@ const Reward = require('../models/Reward');
 const Card = require('../models/Card');
 const Transaction = require('../models/Transaction');
 
-// IMPORTANT: Spend categories should NOT map to "Gift Cards" (too broad).
-// Use Cash Back/Travel/Statement Credit for category-level fallbacks.
+
 const categoryMapping = {
   Dining: 'Cash Back',
   Travel: 'Travel',
@@ -47,7 +46,7 @@ const stableJitter = (str) => {
   return (h % 1000) / 1000000; // 0..0.001
 };
 
-// Dining-related non-merchant rewards you want to allow without direct merchant match
+
 const isDiningAggregatorReward = (rewardTitleNorm) => {
   return (
     textHasPhrase(rewardTitleNorm, 'doordash') ||
@@ -117,12 +116,12 @@ const getRewardCategoryShare = (rewardCategory, userSpending) => {
   return userSpending.total > 0 ? sum / userSpending.total : 0;
 };
 
-// Explainability helper: short "why this is recommended"
+// Explainability helper
 const buildReason = (reward, userSpending) => {
   const rewardCategory = reward.category;
   const titleNorm = normalizeText(reward.title);
 
-  // Merchant match reason (best match by spend share)
+  // Merchant match reason
   const aliases = getRewardMerchantAliases(reward);
   let best = { merchant: null, share: 0 };
 
@@ -144,7 +143,7 @@ const buildReason = (reward, userSpending) => {
 }
 
 
-  // Category reason fallback (short, front-facing)
+  // Category reason fallback 
   if (rewardCategory === 'Cash Back') {
     const sub = cashBackSubcategoryFromTitle(titleNorm);
     if (sub) return `Because you spend on ${sub.toLowerCase()}`;
@@ -171,11 +170,11 @@ const calculateNBAScore = (reward, userSpending) => {
   const rewardCategory = reward.category;
   const titleNorm = normalizeText(reward.title);
 
-  // Only rank categories you intentionally score/recommend
+  
   const ALLOWED = new Set(['Gift Cards', 'Cash Back', 'Travel', 'Statement Credit']);
   if (!ALLOWED.has(rewardCategory)) return 0;
 
-  // 1) Merchant match (primary)
+  // 1) Merchant match 
   const aliases = getRewardMerchantAliases(reward);
 
   let bestMerchantShare = 0;
@@ -185,7 +184,7 @@ const calculateNBAScore = (reward, userSpending) => {
     const merchantNorm = normalizeText(merchantRaw);
     const share = merchantSpent / userSpending.total;
 
-    // Token match prevents punctuation / multi-word merchant issues
+    // Token match
     const tokens = merchantNorm.split(' ').filter(t => t.length >= 3);
 
     const direct =
@@ -214,7 +213,7 @@ const calculateNBAScore = (reward, userSpending) => {
     if (categoryShare < MIN_CATEGORY_SHARE && rewardCategory !== 'Statement Credit') return 0;
   }
 
-  // 4) Score components (capped)
+  // 4) Score components 
   const merchantComponent = merchantMatched ? (750 * saturate(bestMerchantShare, 0.10)) : 0;
 
   let relevantTxCount = 0;
@@ -231,7 +230,7 @@ const calculateNBAScore = (reward, userSpending) => {
   const valuePerPoint = value / points;
   const valueComponent = 110 * saturate(valuePerPoint, 0.008);
 
-  // 5) Boosts (make them specific and non-tie-y)
+  // 5) Boosts 
   let boost = 0;
 
   if (rewardCategory === 'Statement Credit') {
@@ -250,13 +249,13 @@ const calculateNBAScore = (reward, userSpending) => {
       const subShare = getCategoryShareByTxCategory(sub, userSpending);
       boost += 220 * saturate(subShare, 0.12);
     } else {
-      // Generic cash back stays weaker so it doesn't tie/beat category-specific items
+      // Generic cash back 
       const cashBackShare = getRewardCategoryShare('Cash Back', userSpending);
       boost += 35 * saturate(cashBackShare, 0.25);
     }
   }
 
-  // Dining aggregator boost (so DoorDash/Restaurant.com can appear for Dining-heavy cards)
+  // Dining aggregator boost 
   if (rewardCategory === 'Gift Cards' && isDiningAggregatorReward(titleNorm) && !merchantMatched) {
     boost += 120 * saturate(diningShare, 0.12);
   }
@@ -272,9 +271,8 @@ const calculateNBAScore = (reward, userSpending) => {
   return Math.round(Math.max(0, score) * 100) / 100;
 };
 
-// ------------------------
+
 // GET /api/cards/:cardId/rewards/ranked  (mounted at /api/cards/:cardId/rewards, so route is GET /ranked)
-// Also supports older mounts using :id by falling back.
 exports.getRankedRewards = async (req, res) => {
   try {
     const cardId = req.params.cardId || req.params.id;
@@ -318,7 +316,7 @@ exports.getRankedRewards = async (req, res) => {
         const obj = r.toObject();
         const nbaScore = calculateNBAScore(r, userSpending);
 
-        // Remove tier from this ranked payload (frontend can show `reason` instead)
+        // Remove tier from this ranked payload 
         delete obj.tier;
         delete obj.__v;
         delete obj.createdAt;
@@ -346,9 +344,9 @@ exports.getRankedRewards = async (req, res) => {
   }
 };
 
-// ------------------------
+
 // GET /api/cards/:cardId/rewards (mounted at /api/cards/:cardId/rewards, so route is GET /)
-// Also supports older mounts using :id by falling back.
+
 exports.getCardRewards = async (req, res) => {
   try {
     const cardId = req.params.cardId || req.params.id;

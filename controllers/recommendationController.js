@@ -34,7 +34,7 @@ exports.getRecommendations = async (req, res) => {
       rewards.sort((a, b) => a.pointsCost - b.pointsCost);
     }
 
-    // Pick top 3 dynamically scored rewards for banner
+    // Banner gamification reward adder
     const topRewards = rewards.slice(0, 3);
     const featuredReward =
       topRewards.length > 0
