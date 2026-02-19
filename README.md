@@ -70,3 +70,33 @@ JWT_EXPIRE=30d
 | POST   | /api/cards/:cardId/recommendations/refresh | Refresh recommendations   | 
 | GET    | /api/cards/gamification                    | Get gamification insights | 
 
+## Local Setup (2 minutes)
+
+### 1. Clone & Install
+```bash
+git clone <your-repo-url>
+cd ordinal-backend
+npm install
+
+cp .env.example .env
+# Edit .env with your MongoDB URI and JWT_SECRET
+
+# Install MongoDB locally, then use:
+MONGO_URI=mongodb://localhost:27017/ordinal
+
+### Run Server
+npm run dev
+
+### Seed Rewards
+node seeds/seedRewards.js
+
+### Seed Transactions
+node seeds/seedTransactions.js
+
+
+
+
+
+
+
+
